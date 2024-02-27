@@ -45,7 +45,11 @@
 
 
 <div>
-
+  <h2 align="middle">Overview</h2>
+  
+    The project begains with a task of evaluating Bezier curves and surfaces, using De Casteljau's algorithm. This algorithm recursively divides lines connected by control points and creates new lines; it used in computer graphics to model smooth and indefinitely scalable curves and surfaces.
+    We had to implement area-weighted vertex normals to enhance phong shading, which looks much smoother than flat shading. We implemented basic mesh operations such as flip edges and split edges to use in loop subdivision.
+    Loop subdivision, a method for mesh upsampling, was another key focus. Utilizing split edge method and flip edge method, upsampling method provided great insights into the effects of subdivision on mesh geometry, particularly how pre-splitting edges can influence the symmetry and smoothness of subdivided meshes. 
 
 <br>
 
@@ -133,7 +137,7 @@
   Briefly explain how de Casteljau algorithm extends to Bezier surfaces and how you implemented it in order to evaluate Bezier surfaces.
 </b>
 <p>
-  We will be working with Std::vector<std::vector<Vector3D>> controlPoints. This is a “n x n grid” of original control points. For instance, controlPoints[i] contains n control points at the ith row. First, we consider each row of n control points. We evaluate the bezier function for each row. We then consider the column, performing de casteljau. The rows are parametrized by u, and the columns by v. We repeat this process n times until we get to a single point, P that lies on the bezier surface at the given parameter u and v. 
+  We will be working with Std::vector<std::vector<Vector3D> controlPoints. This is a “n x n grid” of original control points. For instance, controlPoints[i] contains n control points at the ith row. First, we consider each row of n control points. We evaluate the bezier function for each row. We then consider the column, performing de casteljau. The rows are parametrized by u, and the columns by v. We repeat this process n times until we get to a single point, P that lies on the bezier surface at the given parameter u and v. 
     To implement this algorithm, we just need to perform the same De Casteljau’s algorithm to reduce all n rows to a point using parameter u. Then, for each of these points in order, perform De Casteljau’s algorithm again to get a single point. 
     
 </p>
