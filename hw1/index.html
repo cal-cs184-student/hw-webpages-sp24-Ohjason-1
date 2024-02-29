@@ -33,8 +33,10 @@
 
 <h2 align="middle">Overview</h2>
 <p>Give a high-level overview of what you implemented in this homework Think about what you've built as a whole. Share your thoughts on what interesting things you've learned from completing the homework.</p>
-
-<h2 align="middle">Section I: Rasterization</h2>
+  Overall, I had to implement a method that fills triangles in pixels, calculating vectors. I used rasterization formula to figure out if a coordinate is in a triangle, and fill in a pixel with each coordinate +0.5, since actual drawing has to be center of a pixel. Then, I had to figure out aliasing by going through all the pixels that are supersampled and compute the average color value for a pixel. I used sample_buffer the supersampling to store each color value of the grid. 
+  For task 3, I played with transforms, which was translating, rotating, and scaling geometric forms by calculating matrix. For task 4, 5, and 6, I worked on barycentric coordinates, which help making more natural colorings in the screen. Barycentric coordinates with colors are basically calculating how much of color in each vertex on a triangle is required to render a color on a certain pixel. 
+ There were a slight difference between bilinear filtering and nearest filtering: bilinear filtering provides more blurry and natural vibe of a picture. For task 6, I implemented sample function, which requires computing miplevel for each coordinate, and this function enables making more textured images.
+  <h2 align="middle">Section I: Rasterization</h2>
 
 <h3 align="middle">Part 1: Rasterizing single-color triangles</h3>
 
@@ -194,7 +196,7 @@ Sample_bilinear() function was a little more sophisticated that I made four colo
 <h3 align="middle">Part 6: "Level sampling" with mipmaps for texture mapping</h3>
 In rasterize_textured_triangle method, I got rid of checking psm value conditions and put it in sample function in texture.cpp. To implement get_level function, I calculated the difference vectors sp.p_dx_uv - sp.p_uv and sp.p_dy_uv - sp.p_uv, and used the formula from the lecture to get D value for level.
 There are total six conditions in the sample() function. Based on lsm value, I checked whether psm is P_LINEAR or P_NEAREST, and used appropriate functions for each condition. 
-Shown below, you can see the difference between a image in nearest filtering and a image in bilinear filtering. Bilinear filtering gives more natural feeling of the image overall. 
+Shown below, you can see the difference between a image in nearest filtering and a image in bilinear filtering. Bilinear filtering gives more natural feeling of the image overall. <br></br><br></br>
 <div align="middle">
   <table style="width=100%">
     <tr align="center">
@@ -209,6 +211,11 @@ Shown below, you can see the difference between a image in nearest filtering and
     </tr>
   </table>
 </div>  
+<div align="middle">
+  <img src="images/img23.png" align="middle" width="50%">
+  <figcaption>svg/mipmap/test1.svg with Level Sampling</figcaption>
+</div>
+
 <br></br>
 <br>Code: https://github.com/cal-cs184-student/hw1-rasterizer-sp24-jason</br>
 </body>
