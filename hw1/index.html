@@ -1,7 +1,215 @@
-<html>
-	<head>
-	</head>
-	<body>
-		Homework 1 index.html here
-	</body>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<style>
+  body {
+    padding: 100px;
+    width: 1000px;
+    margin: auto;
+    text-align: left;
+    font-weight: 300;
+    font-family: 'Open Sans', sans-serif;
+    color: #121212;
+  }
+  h1, h2, h3, h4 {
+    font-family: 'Source Sans Pro', sans-serif;
+  }
+</style>
+<title>CS 184/284A Rasterizer</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link href="https://fonts.googleapis.com/css?family=Open+Sans|Source+Sans+Pro" rel="stylesheet">
+</head>
+
+
+<body>
+
+<h1 align="middle">CS 184/284A: Computer Graphics and Imaging, Spring 2024</h1>
+<h1 align="middle">Homework 1: Rasterizer</h1>
+<h2 align="middle">Jaewon Oh</h2>
+
+<br><br>
+
+<div>
+
+<h2 align="middle">Overview</h2>
+<p>Give a high-level overview of what you implemented in this homework Think about what you've built as a whole. Share your thoughts on what interesting things you've learned from completing the homework.</p>
+
+<h2 align="middle">Section I: Rasterization</h2>
+
+<h3 align="middle">Part 1: Rasterizing single-color triangles</h3>
+
+
+<p>Based on the slides 48 in lecture 2, I used the formula to create a triangle: L_i(x, y) = -(x-X_i)dYi + (y-Yi)dXi, and it goes from 0 to 2. Tests 3,4, and 5 passed with just one condition, which was rasterizing triangles assuming the vector goes clockwise. Then, I could not pass test 6, because there were some triangle that required the vecotrs to go counter-clockwise, so I just made an additional condition, in which the vector goes counter-clockwise. My algorithm is no worse than one that check each sample within bounding box of the triangle because it first finds points for bounding box; maxX, minX, maxY, and minY.</p>
+ In addition to this, before I calculate relation between vectors, I added 0.5 to variable i and j because the coordinates of my sample should be equal to an integer point plus (.5,.5). Then subtracted 0.5 before executing the next loop.
+<b></b>
+
+<div align="middle">
+  <table style="width=100%">
+    <tr>
+      <td>
+        <img src="images/img2.png" align="middle" width="400px"/>
+        <figcaption align="middle">basic/test3.svg</figcaption>
+      </td>
+      <td>
+        <img src="images/img4.png" align="middle" width="400px"/>
+        <figcaption align="middle">basic/test4.svg</figcaption>
+      </td>
+    </tr>
+    <br>
+    <tr>
+      <td>
+        <img src="images/img6.png" align="middle" width="400px"/>
+        <figcaption align="middle">basic/test5.svg</figcaption>
+      </td>
+      <td>
+        <img src="images/img8.png" align="middle" width="400px"/>
+        <figcaption align="middle">basic/test6.svg</figcaption>
+      </td>
+    </tr>
+  </table>
+</div>
+
+
+<h3 align="middle">Part 2: Antialiasing triangles</h3>
+<p>
+  sqrt(sample_rate) * sqrt(sample_rate) equals the sample_rate. I had to re-implement fill_pixel method in a way that the program fills new pixels created by supersampling. 
+  Key point for fill_pixel method was finding correct index for sample_buffer. Primary formula for index was y * width + x. Based on this, I modified this in a way that the program can iterate through every single pixel in the supersampled grid. Below is just one of the notes that I used to get an idea for indexing.
+  For the average coloring, I added the all the color value of r, g, and b in supersampled grid, and divided by sample_rate.
+  <div align="middle">
+    <img src="images/img10.png" align="middle" width="50%">
+  </div>
+
+  <div align="middle">
+    <table style="width=100%">
+      <tr>
+        <td>
+          <img src="images/img3.png" align="middle" width="400px"/>
+          <figcaption align="middle">basic/test3.svg</figcaption>
+        </td>
+        <td>
+          <img src="images/img5.png" align="middle" width="400px"/>
+          <figcaption align="middle">basic/test4.svg</figcaption>
+        </td>
+      </tr>
+      <br>
+      <tr>
+        <td>
+          <img src="images/img7.png" align="middle" width="400px"/>
+          <figcaption align="middle">basic/test5.svg</figcaption>
+        </td>
+        <td>
+          <img src="images/img9.png" align="middle" width="400px"/>
+          <figcaption align="middle">basic/test6.svg</figcaption>
+        </td>
+      </tr>
+    </table>
+  </div>
+</p>
+
+<br></br>
+<h3 align="middle">Part 3: Transforms</h3>
+The given matrices are 3X3 because we can operate in homogeneous coordinates. Using methods that I implemented - translate(), scale(), and rotate() - I tried to make my cubeman act like he was trying to sit down. 
+<div align="middle">
+  <table style="width=100%">
+    <tr>
+      <td>
+        <img src="images/img11.png" align="middle" width="400px"/>
+        <figcaption align="middle">Just with Translate</figcaption>
+      </td>
+      <td>
+        <img src="images/img12.png" align="middle" width="400px"/>
+        <figcaption align="middle">With Translate and Scale</figcaption>
+      </td>
+    </tr>
+    <br>
+    <tr>
+      <td>
+        <img src="images/img13.png" align="middle" width="400px"/>
+        <figcaption align="middle">With Translate, Scale, and Roate</figcaption>
+      </td>
+      <td>
+        <img src="images/img14.png" align="middle" width="400px"/>
+        <figcaption align="middle">My_robot.svg result</figcaption>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<h2 align="middle">Section II: Sampling</h2>
+
+<h3 align="middle">Part 4: Barycentric coordinates</h3>
+<p>As implemented in the task 2, I tried to figure out whether the coordinates are in the triangle, and whether it is clockwise or counter-clockwise, using rasterization. Then if the coordinate fits for rasterization conditions, I calculated the color using barycentric coordinates.  
+  For this task, I had to calculate the color of a point inside a triangle given the colors at the vertices of the triangle and using the barycentric coordinates of the point. The formula for this involves first calculating the barycentric coordinates of the point with respect to the triangle's vertices, and then using these coordinates as weights to blend the colors of the vertices.
+  The formula given below helps you understand how to calculate alpha, beta, and gamma for Barycentric Coordinates.
+  As mentioned in the ED Post, I used formula, Color color = alpha * c0 + beta * c1 + gamma * c2, to calculate the color for barycentric coordinates.
+  </p>
+<br></br>
+<div align="middle">
+  <table style="width=100%">
+    <tr align="center">
+      <td>
+        <img src="images/img16.png" align="middle" width="400px"/>
+        <figcaption>Barycentric Coordinate Formula</figcaption>
+      </td>
+      <td>
+        <img src="images/img15.png" align="middle" width="400px"/>
+        <figcaption>svg/basic/test7.svg</figcaption>
+      </td>
+    </tr>
+  </table>
+</div>  
+</br>
+
+
+<h3 align="middle">Part 5: "Pixel sampling" for texture mapping</h3>
+As mentioned in the ED post, for sampling functions, I scaled uv.x and uv.y by mip's width and height, and to get barycentric coordinates, I re-used the code from task 4. Instead of using color values from task 4, I used u and v values to put in sample functions.
+If the point is in the triangle, I checked whether psm is set to bilinear or nearest. Then, with the color value obtained from the sample function, I stored it in sample buffer with correct x and y index.
+For texture.cpp, sample_nearest function was quite simple. As mentioned, I scaled uv.x and uv.y by mip's width and height value and rounded the (double) values to int, so that the values can fit into get_texel() function.
+Sample_bilinear() function was a little more sophisticated that I made four color vectors, using four different int coordinates, and used bilinear filtering formula from the lecture to find correct color vector to render texture. 
+<div align="middle">
+  <table style="width=100%">
+    <tr>
+      <td>
+        <img src="images/img19.png" align="middle" width="400px"/>
+        <figcaption align="middle"> svg/texmap/test1.svg</figcaption>
+      </td>
+      <td>
+        <img src="images/img20.png" align="middle" width="400px"/>
+        <figcaption align="middle">svg/texmap/test2.svg</figcaption>
+      </td>
+    </tr>
+    <br>
+    <tr>
+      <td>
+        <img src="images/img18.png" align="middle" width="400px"/>
+        <figcaption align="middle">svg/texmap/test4.svg</figcaption>
+      </td>
+      <td>
+        <img src="images/img17.png" align="middle" width="400px"/>
+        <figcaption align="middle">svg/texmap/test6.svg</figcaption>
+      </td>
+    </tr>
+  </table>
+</div>
+<h3 align="middle">Part 6: "Level sampling" with mipmaps for texture mapping</h3>
+In rasterize_textured_triangle method, I got rid of checking psm value conditions and put it in sample function in texture.cpp. To implement get_level function, I calculated the difference vectors sp.p_dx_uv - sp.p_uv and sp.p_dy_uv - sp.p_uv, and used the formula from the lecture to get D value for level.
+There are total six conditions in the sample() function. Based on lsm value, I checked whether psm is P_LINEAR or P_NEAREST, and used appropriate functions for each condition. 
+Shown below, you can see the difference between a image in nearest filtering and a image in bilinear filtering. Bilinear filtering gives more natural feeling of the image overall. 
+<div align="middle">
+  <table style="width=100%">
+    <tr align="center">
+      <td>
+        <img src="images/img22.png" align="middle" width="400px"/>
+        <figcaption>svg/mipmap/test1.svg in nearest</figcaption>
+      </td>
+      <td>
+        <img src="images/img21.png" align="middle" width="400px"/>
+        <figcaption>svg/mipmap/test1.svg in bilinear</figcaption>
+      </td>
+    </tr>
+  </table>
+</div>  
+<br></br>
+<br>Code: https://github.com/cal-cs184-student/hw1-rasterizer-sp24-jason</br>
+</body>
 </html>
